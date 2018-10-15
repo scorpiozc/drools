@@ -1,0 +1,53 @@
+//created on: 2018-10-12
+package od
+
+//list any import classes here.
+import com.sample.entity.ODTrade;
+import com.sample.entity.ODDay;
+
+
+//declare any global variables here
+
+
+
+
+rule "in or out station code lose"
+
+    when
+        //conditions
+        ODTrade(inStationTime!=null&&outStationTime!=null&&(inStation==""||outStation==""))
+    then
+        //actions
+		System.out.println("有进出站时间，但O站或D站编码缺失");
+		System.out.println("同站进出处理");
+end
+
+rule "out station code&time lose"
+    //include attributes such as "salience" here...
+    
+    when
+        //conditions
+        ODTrade(inStationTime!=null&&inStation!="")
+        ODTrade(outStationTime==null&&outStation=="")
+    then
+        //actions
+		System.out.println("有O站的编码和时间，但D站的编码和时间缺失");
+		System.out.println("同站进出处理");
+end
+
+rule "in station code&time lose"
+	when
+		ODTrade(outStationTime!=null&&outStation!="")
+        ODTrade(inStationTime==null&&inStation=="")
+	then
+		System.out.println("有D站的编码和时间，但O站的编码和时间缺失");
+		System.out.println("同站进出处理");
+end
+
+rule "defferent day od"
+	when
+		ODDay( inStationDay != outStationDay )
+	then
+		System.out.println("跨天交易");
+		System.out.println("分配型处理");
+end
